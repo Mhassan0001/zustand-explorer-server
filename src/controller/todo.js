@@ -1,14 +1,14 @@
-import Todo from "../model/todo";
+import Todo from "../model/todo.js";
+import asyncHandler from "../middleware/asyncHandler.js";
+import AppError from "../utils/appError.js";
 
 //! =================================================
 
-const createTask = async (req, res) => {
+const createTask = asyncHandler(async (req, res) => {
   const { task } = req.body;
 
   if (!task || typeof task !== "string" || task.trim() === "") {
-    return res
-      .staus(400)
-      .json({ success: false, message: "Valid task is required" });
+    throw new AppError("Valid task is required", 400);
   }
 
   const newTodo = await Todo.create({ task });
@@ -17,20 +17,17 @@ const createTask = async (req, res) => {
     success: true,
     data: newTodo,
   });
-};
+});
 
 //! =================================================
 
-const remove = async (req, res) => {
+const remove = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const removeTodo = await Todo.findByIdAndDelete(id);
 
   if (!removeTodo) {
-    return res.status(404).json({
-      success: false,
-      msg: "Todo not Found....",
-    });
+    throw new AppError("Todo not Found....", 404);
   }
 
   res.status(200).json({
@@ -38,11 +35,11 @@ const remove = async (req, res) => {
     message: "Todo deleted successfully",
     data: removeTodo,
   });
-};
+});
 
 //! =================================================
 
-const updateTodo = async (req, res) => {
+const updateTodo = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { task, status } = req.body;
 
@@ -59,10 +56,7 @@ const updateTodo = async (req, res) => {
   );
 
   if (!updateTodo) {
-    return res.status(404).json({
-      success: false,
-      msg: "Todo not Found....",
-    });
+    throw new AppError("Todo not Found....", 404);
   }
 
   res.status(200).json({
@@ -70,7 +64,7 @@ const updateTodo = async (req, res) => {
     message: "Todo updated successfully",
     data: updateTodo,
   });
-};
+});
 
 //! =================================================
 
