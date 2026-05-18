@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
 import todoRouter from "../src/routes/todo.js";
+import limiter from "./config/rateLimit.js";
 
 const CLIENT_URL = "http://localhost:5173";
 
@@ -17,6 +18,7 @@ const port = process.env.PORT || 9000;
 server.use(cors({ origin: CLIENT_URL, credentials: true }));
 server.use(express.json());
 server.use(morgan("dev"));
+server.use(limiter);
 server.use("/todo", todoRouter);
 
 server.get("/", (req, res) => {
