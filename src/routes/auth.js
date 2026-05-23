@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { createAdmin,createUser,login } from "../controller/auth";
+import { createAdmin,createUser,login } from "../controller/auth.js";
 
 router.route("/createAdmin").post(createAdmin);
 router.route("/create").post(createUser);
