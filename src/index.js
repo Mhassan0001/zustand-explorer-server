@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
 import todoRouter from "../src/routes/todo.js";
+import authRouter from "../src/routes/auth.js";
 import limiter from "./config/rateLimit.js";
 
 const CLIENT_URL = "http://localhost:5173";
@@ -20,6 +21,7 @@ server.use(express.json());
 server.use(morgan("dev"));
 server.use(limiter);
 server.use("/todo", todoRouter);
+server.use("/auth", authRouter);
 
 server.get("/", (req, res) => {
   res.json({ msg: "Server Running Successfully....." });
