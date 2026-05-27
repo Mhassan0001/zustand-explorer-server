@@ -8,6 +8,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import todoRouter from "../src/routes/todo.js";
 import authRouter from "../src/routes/auth.js";
 import limiter from "./config/rateLimit.js";
+import cookieParser from "cookie-parser";
 
 const CLIENT_URL = "http://localhost:5173";
 
@@ -20,6 +21,7 @@ server.use(cors({ origin: CLIENT_URL, credentials: true }));
 server.use(express.json());
 server.use(morgan("dev"));
 server.use(limiter);
+server.use(cookieParser());
 server.use("/todo", todoRouter);
 server.use("/auth", authRouter);
 
