@@ -5,13 +5,17 @@ import AppError from "../utils/appError.js";
 //! =================================================
 
 const createTask = asyncHandler(async (req, res) => {
+  const createdBy = req.user._id;
   const { task } = req.body;
 
   if (!task || typeof task !== "string" || task.trim() === "") {
     throw new AppError("Valid task is required", 400);
   }
 
-  const newTodo = await Todo.create({ task });
+  const newTodo = await Todo.create({
+    task,
+    createdBy,
+  });
 
   res.status(201).json({
     success: true,
@@ -22,9 +26,12 @@ const createTask = asyncHandler(async (req, res) => {
 //! =================================================
 
 const remove = asyncHandler(async (req, res) => {
+  const createdBy = req.user._id;
   const { id } = req.params;
+  let role = req.user.role;
+  let filter = role === "admin" ? { _id: id } : { _id: id, createdBy };
 
-  const removeTodo = await Todo.findByIdAndDelete(id);
+  const removeTodo = await Todo.findOneAndDelete(filter);
 
   if (!removeTodo) {
     throw new AppError("Todo not Found....", 404);
@@ -40,11 +47,13 @@ const remove = asyncHandler(async (req, res) => {
 //! =================================================
 
 const updateTodo = asyncHandler(async (req, res) => {
+  const createdBy = req.user._id;
   const { id } = req.params;
   const { task, status } = req.body;
-
-  const updateTodo = await Todo.findByIdAndUpdate(
-    id,
+  let role = req.user.role;
+  let filter = role === "admin" ? { _id: id } : { _id: id, createdBy };
+  const updateTodo = await Todo.findOneAndUpdate(
+    filter,
     {
       task,
       status,

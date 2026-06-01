@@ -15,6 +15,7 @@ const schema = mongoose.Schema(
     email: {
       type: String,
       required: true,
+      index: true,
     },
 
     mobile: {
