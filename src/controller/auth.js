@@ -121,5 +121,19 @@ const login = asyncHandler(async (req, res) => {
     data: user,
   });
 });
+//!================================================================
 
-export { createUser, login, createAdmin };
+const getMe = asyncHandler(async (req, res) => {
+  const user = await auth.findById(req.user._id).select("-password");
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+//!================================================================
+export { createUser, login, createAdmin, getMe };
