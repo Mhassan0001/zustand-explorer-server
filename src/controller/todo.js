@@ -4,6 +4,19 @@ import AppError from "../utils/appError.js";
 
 //! =================================================
 
+const getTodo = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const createdBy = req.user._id;
+  const role = req.user.role;
+  let filter = role === "admin" ? { _id: id } : { createdBy };
+
+  const response = await Todo.find(filter);
+
+  res.status(200).json({ success: true, data: response });
+});
+
+//! =================================================
+
 const createTask = asyncHandler(async (req, res) => {
   const createdBy = req.user._id;
   const { task } = req.body;
@@ -77,4 +90,4 @@ const updateTodo = asyncHandler(async (req, res) => {
 
 //! =================================================
 
-export { createTask, remove, updateTodo };
+export { createTask, remove, updateTodo ,getTodo};
