@@ -136,4 +136,15 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 //!================================================================
-export { createUser, login, createAdmin, getMe };
+
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie("token", cookieOption);
+
+  res.status(200).json({
+    success: true,
+    msg: "Logout Successfully......",
+  });
+});
+
+//!================================================================
+export { createUser, login, createAdmin, getMe, logout };
